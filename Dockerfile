@@ -2,6 +2,10 @@ FROM openjdk:17-jdk-alpine
 
 WORKDIR /app
 
+COPY pom.xml .
+COPY src ./src
+
+
 COPY target/demo-devops-be-0.0.1-SNAPSHOT.jar demo-devops-be.jar
 
 EXPOSE 8080
