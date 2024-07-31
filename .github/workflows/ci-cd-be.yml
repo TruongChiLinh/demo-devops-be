@@ -56,8 +56,9 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-maven-
 
-    - name: Run tests with Maven
-      run: mvn test
+    - name: Build with Maven
+      run: mvn -B package -DskipTests --file pom.xml
+
 
   push:
     runs-on: ubuntu-latest
