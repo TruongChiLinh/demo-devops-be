@@ -1,10 +1,13 @@
-
 name: Java CI with Maven
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,7 +19,7 @@ jobs:
     - name: Set up JDK 17
       uses: actions/setup-java@v2
       with:
-        distribution: 'temurin' # hoặc bạn có thể chọn distribution khác như 'zulu'
+        distribution: 'temurin'
         java-version: '17'
 
     - name: Cache Maven packages
@@ -26,6 +29,11 @@ jobs:
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-maven-
+
+    - name: Start MySQL service
+      run: |
+        docker run --name mysql-container -e MYSQL_ROOT_PASSWORD=123456 -e MYSQL_DATABASE=devops -p 3306:3306 -d mysql:8.0
+        sleep 30 # Đợi MySQL khởi động hoàn toàn
 
     - name: Build with Maven
       run: mvn -B package --file pom.xml
@@ -54,4 +62,4 @@ jobs:
           ${{ runner.os }}-maven-
 
     - name: Run tests with Maven
-      run: mvn test
+      run: mvn test -X
